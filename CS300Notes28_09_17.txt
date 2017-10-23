@@ -1,4 +1,0 @@
-how did he prove that there is no sublinear time algorithm? slides 311
-fibonacci thing? slide 47 green slides
-	how is it exponential?
-define a resource function
