@@ -1,0 +1,12 @@
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\bin\Debug\Server.exe.config
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.Server.resources
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.Properties.Resources.resources
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.csproj.GenerateResource.Cache
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\bin\Debug\Server.exe
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\bin\Debug\Server.pdb
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.exe
+c:\users\suuser\documents\visual studio 2012\Projects\Server\Server\obj\Debug\Server.pdb
+C:\Users\suuser\Desktop\cansu_ulker_CS408LAB3\Server\bin\Debug\Server.exe.config
+C:\Users\suuser\Desktop\cansu_ulker_CS408LAB3\Server\obj\Debug\Server.exe
+C:\Users\suuser\Desktop\cansu_ulker_CS408LAB3\Server\obj\Debug\Server.pdb
