@@ -64,7 +64,7 @@ namespace Player
                 sendUsername(textBox_username.Text);
                 receiveThread = new Thread(new ThreadStart(Receive));
                 receiveThread.Start();
-                richTextBox.AppendText("Connected to the server.");
+                richTextBox.AppendText("Connected to the server.\n");
             }
             catch
             {
@@ -118,7 +118,7 @@ namespace Player
                     if(control == "2L")
                     {
                         player_list.AppendText(raw_message.Substring(2));
-                        player_list.AppendText("Player list is received.");
+                        player_list.AppendText("Player list is received.\n");
                     }
                     if(control == "1M")
                     {

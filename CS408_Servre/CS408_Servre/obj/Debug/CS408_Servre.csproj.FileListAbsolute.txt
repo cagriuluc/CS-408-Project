@@ -2,9 +2,9 @@ c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.exe
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.pdb
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csprojResolveAssemblyReference.cache
-c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.Player.resources
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.Properties.Resources.resources
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csproj.GenerateResource.Cache
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csproj.CoreCompileInputs.cache
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.exe
 c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.pdb
+c:\users\çağrı\source\repos\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.Form1.resources

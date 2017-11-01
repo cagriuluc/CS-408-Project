@@ -15,26 +15,28 @@ namespace CS408_Servre
 
 
 {
-    public class Player
-    {
-       
-        public Socket player_socket;
-        public string username;
-        public Player(Socket p, string un)
-        {
-            player_socket = p;
-            username = un;
-        }
-
-        public string GetName()
-        {
-            return username;
-
-        }
-    }
+    
 
     public partial class Form1 : Form
     {
+        public class Player
+        {
+
+            public Socket player_socket;
+            public string username;
+            public Player(Socket p, string un)
+            {
+                player_socket = p;
+                username = un;
+            }
+
+            public string GetName()
+            {
+                return username;
+
+            }
+        }
+
         bool listening = false;
         bool terminating = false;
         bool accept = true;
@@ -54,7 +56,7 @@ namespace CS408_Servre
         {
             for(int i = 0; i < playerList.Count; i++)
             {
-                if(playerList[i].GetName() == un ) //undonee....
+                if(playerList[i].GetName() == un ) 
                 {
                     return i;
                 }
@@ -73,6 +75,7 @@ namespace CS408_Servre
             richTextBox1.AppendText(Environment.NewLine + "Started listening to Port " + port_no);
             thrAccept = new Thread(new ThreadStart(Accept));
             thrAccept.Start();
+            thrAccept.IsBackground = true;
             listening = true;
 
         }
@@ -82,7 +85,7 @@ namespace CS408_Servre
 
             byte[] buffer = Encoding.Default.GetBytes("0M" + message); //0M is a tag for a message
             playerList[player_no].player_socket.Send(buffer);
-            richTextBox1.AppendText("\nMessage sent.");
+            richTextBox1.AppendText(Environment.NewLine +  "Message sent.");
 
 
         }
@@ -124,6 +127,7 @@ namespace CS408_Servre
                     Thread thrReceive;
                     thrReceive = new Thread(new ThreadStart(Receive));
                     thrReceive.Start();
+                    thrReceive.IsBackground = true;
                 }
                 catch
                 {
@@ -156,6 +160,7 @@ namespace CS408_Servre
                     string raw_message = Encoding.Default.GetString(buffer);
                     string control = raw_message.Substring(0, 2);
                     //0M is a message to the lobby from a player
+                    //0L is a request from the player for the player list
                     if (control == "0M")
                     {
                         raw_message = raw_message.Substring(0, raw_message.IndexOf("\0")); 
@@ -176,7 +181,7 @@ namespace CS408_Servre
                     if (!terminating)
                         richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
                     n.Close();
-                    playerList.Remove(playerList[playerList.Count-1]);
+                    playerList.Remove(playerList[CheckName(username)]);
                     connected = false;
                 }
             }
