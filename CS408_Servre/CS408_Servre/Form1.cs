@@ -19,7 +19,7 @@ namespace CS408_Servre
     {
        
         public Socket player_socket;
-        string username;
+        public string username;
         public Player(Socket p, string un)
         {
             player_socket = p;
@@ -47,18 +47,19 @@ namespace CS408_Servre
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
-        public bool CheckName(string un)
+        public int CheckName(string un)
         {
             for(int i = 0; i < playerList.Count; i++)
             {
                 if(playerList[i].GetName() == un ) //undonee....
                 {
-                    return true;
+                    return i;
                 }
             }
-            return false;
+            return -1;
         }
 
         private void listen_button_Click(object sender, EventArgs e)
@@ -66,6 +67,7 @@ namespace CS408_Servre
            
 
             port_no = Convert.ToInt32(port_text_box.Text);
+            
             server.Bind(new IPEndPoint(IPAddress.Any, port_no));
             server.Listen(3);
             richTextBox1.AppendText(Environment.NewLine + "Started listening to Port " + port_no);
@@ -75,9 +77,32 @@ namespace CS408_Servre
 
         }
 
+        void sendMessage(string message, int player_no)
+        {
+
+            byte[] buffer = Encoding.Default.GetBytes("0M" + message); //0M is a tag for a message
+            playerList[player_no].player_socket.Send(buffer);
+            richTextBox1.AppendText("\nMessage sent.");
+
+
+        }
+
+        void sendList(int player_no)
+        {
+            byte[] buffer = new byte[64];
+            for (int i = 0; i < playerList.Count - 1; i++)
+            {
+                buffer = Encoding.Default.GetBytes("1L" + playerList[i].GetName()); //1L is a tag for a player name
+                playerList[player_no].player_socket.Send(buffer);
+                
+            }
+            buffer = Encoding.Default.GetBytes("2L" + playerList[playerList.Count-1].GetName()); //2L is a tag for the last player name
+            playerList[player_no].player_socket.Send(buffer);
+
+        }
         //this function will be used in the ThrAccept
         //so that new clients will be able to connect even if server is busy (with sending messages)
-         private void Accept()
+        private void Accept()
         {
             while (accept)
             {
@@ -87,12 +112,13 @@ namespace CS408_Servre
                     byte[] buffer = new byte[64];
                     int rec = current.Receive(buffer);
                     string uname = Encoding.Default.GetString(buffer);
-                    if (CheckName(uname))
+                    if (CheckName(uname) != -1)
                     {
                         richTextBox1.AppendText(Environment.NewLine + "New player could not be added. Reason: Same username with anothe player.");
+                        current.Close();
                         continue;
                     }
-                    Player newPlayer = new Player(current, uname);//problem
+                    Player newPlayer = new Player(current, uname);
                     playerList.Add(newPlayer);
                     richTextBox1.AppendText(Environment.NewLine + "New player with username " + uname + " added.");
                     Thread thrReceive;
@@ -104,7 +130,8 @@ namespace CS408_Servre
                     if (terminating)
                         accept = false;
                     else
-                        Console.Write("Listening socket has stopped working...\n");
+                        richTextBox1.AppendText(Environment.NewLine + "Listening socket has stopped listening...");
+
                 }
             }
         }
@@ -113,7 +140,7 @@ namespace CS408_Servre
         {
             bool connected = true;
             Socket n = playerList[playerList.Count - 1].player_socket;
-
+            string username = playerList[playerList.Count - 1].username;
             while (connected)
             {
                 try
@@ -126,14 +153,28 @@ namespace CS408_Servre
                         throw new SocketException();
                     }
 
-                    string newmessage = Encoding.Default.GetString(buffer);
-                    newmessage = newmessage.Substring(0, newmessage.IndexOf("\0"));
-                    Console.Write("Client: " + newmessage + "\r\n");
+                    string raw_message = Encoding.Default.GetString(buffer);
+                    string control = raw_message.Substring(0, 2);
+                    //0M is a message to the lobby from a player
+                    if (control == "0M")
+                    {
+                        raw_message = raw_message.Substring(0, raw_message.IndexOf("\0")); 
+                        string text = username + ": " + raw_message;
+                        richTextBox1.AppendText(Environment.NewLine + text);
+                    }
+
+                    if(control == "0L")
+                    {
+                        richTextBox1.AppendText(Environment.NewLine + "List request is received from " + username);
+                        sendList(CheckName(username));
+                        richTextBox1.AppendText(Environment.NewLine + "List is sent to " + username);
+                    }
+                
                 }
                 catch
                 {
                     if (!terminating)
-                        Console.Write("Client has disconnected...\n");
+                        richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
                     n.Close();
                     playerList.Remove(playerList[playerList.Count-1]);
                     connected = false;

@@ -77,7 +77,7 @@ namespace Player
         void sendMessage(string message)
         {
             
-                byte[] buffer = Encoding.Default.GetBytes(message);
+                byte[] buffer = Encoding.Default.GetBytes("0M" + message); //0M is a tag for a message
                 clientSocket.Send(buffer);
                 richTextBox.AppendText("Message sent.\n");
             
@@ -105,6 +105,24 @@ namespace Player
                     if (rec <= 0)
                     {
                         throw new SocketException();
+                    }
+                    string raw_message = Encoding.Default.GetString(buffer);
+                    string control = raw_message.Substring(0, 2);
+                    //1L is an element of the list of players
+                    //2L is the last element of the list of players
+                    //1M is a message from the server that is broadcast
+                    if (raw_message.Substring(0,2) == "1L")
+                    {
+                        player_list.AppendText(raw_message.Substring(2));
+                    }
+                    if(control == "2L")
+                    {
+                        player_list.AppendText(raw_message.Substring(2));
+                        player_list.AppendText("Player list is received.");
+                    }
+                    if(control == "1M")
+                    {
+                        player_list.AppendText(raw_message.Substring(2));
                     }
                 }
                 catch
@@ -163,6 +181,9 @@ namespace Player
 
         private void button_List_Click(object sender, EventArgs e)
         {
+            byte[] buffer = Encoding.Default.GetBytes("0L"); //0L is a tag for the request of list of the players
+            clientSocket.Send(buffer);
+            richTextBox.AppendText("Player list request sent.\n");
 
         }
 
