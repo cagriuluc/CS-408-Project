@@ -111,14 +111,14 @@ namespace Player
                     //1L is an element of the list of players
                     //2L is the last element of the list of players
                     //1M is a message from the server that is broadcast
-                    if (raw_message.Substring(0,2) == "1L")
+                    if (control == "1L") 
                     {
-                        player_list.AppendText(raw_message.Substring(2));
+                        player_list.AppendText(Environment.NewLine + raw_message.Substring(2));
                     }
                     if(control == "2L")
                     {
-                        player_list.AppendText(raw_message.Substring(2));
-                        player_list.AppendText("Player list is received.\n");
+                        player_list.AppendText(Environment.NewLine + raw_message.Substring(2));
+                        player_list.AppendText(Environment.NewLine + "Player list is received.\n");
                     }
                     if(control == "1M")
                     {

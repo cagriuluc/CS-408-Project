@@ -1,1 +1,11 @@
 c:\users\suuser\documents\visual studio 2012\Projects\CS408P1_Server\CS408P1_Server\bin\Debug\CS408P1_Server.exe.config
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\bin\Debug\CS408P1_Server.exe.config
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\bin\Debug\CS408P1_Server.exe
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\bin\Debug\CS408P1_Server.pdb
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.csprojResolveAssemblyReference.cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.Server.resources
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.Properties.Resources.resources
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.csproj.GenerateResource.Cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.csproj.CoreCompileInputs.cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.exe
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408P1_Server\CS408P1_Server\obj\Debug\CS408P1_Server.pdb
