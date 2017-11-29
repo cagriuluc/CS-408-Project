@@ -189,13 +189,24 @@ namespace CS408_Servre
                     else if(control == "0I")
                     {
                         int rno = CheckName(message);
-                        if(rno == -1)
+                        if (rno == -1)
                         {
                             sendMessage("\nPlayer was not found :(", CheckName(username));
+                            richTextBox1.AppendText(Environment.NewLine + "Unsuccessful invite from " + username + ", player is not connected");
+                            
                         }
-                        richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username);
-                        SendInvitation(username, message); //message is receipient username in this case
+                        else if (playerList[rno].in_game == true)
+                        {
+                            sendMessage("\nPlayer is already in a game :(", CheckName(username));
+                            richTextBox1.AppendText(Environment.NewLine + "Unsuccessful invite from " + username + ", player is in a game");
 
+                        }
+                        else
+                        {
+                            richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username + " to " + message);
+                            SendInvitation(username, message); //message is receipient username in this case
+                            richTextBox1.AppendText(Environment.NewLine + "Invitation sent to " + message + " from " + username);
+                        }
                     }
 
                     else if(control == "2I")

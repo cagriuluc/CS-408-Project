@@ -207,5 +207,10 @@ namespace CS408_Client
                 richTextBox.AppendText("ERROR: Invitation could not be sent .\n");
             }
         }
+
+        private void Client_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
