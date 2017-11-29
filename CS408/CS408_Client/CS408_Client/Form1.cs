@@ -263,8 +263,6 @@ namespace CS408_Client
             }
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         private void button_Invite_Click_1(object sender, EventArgs e)
         {
 
@@ -284,16 +282,5 @@ namespace CS408_Client
             }
 
         }
-=======
-=======
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
-        private void Client_Load(object sender, EventArgs e)
-        {
-
-        }
-<<<<<<< HEAD
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
-=======
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
     }
 }

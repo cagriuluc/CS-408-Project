@@ -7,8 +7,6 @@ C:\Users\ASUS\source\repos\CS408_Client\CS408_Client\obj\Debug\CS408_Client.cspr
 C:\Users\ASUS\source\repos\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.CoreCompileInputs.cache
 C:\Users\ASUS\source\repos\CS408_Client\CS408_Client\obj\Debug\CS408_Client.exe
 C:\Users\ASUS\source\repos\CS408_Client\CS408_Client\obj\Debug\CS408_Client.pdb
-<<<<<<< HEAD
-<<<<<<< HEAD
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.exe
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.pdb
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csprojResolveAssemblyReference.cache
@@ -18,19 +16,12 @@ C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\ob
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.CoreCompileInputs.cache
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.exe
 C:\Users\ASUS\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.pdb
-=======
-=======
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.exe
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.pdb
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csprojResolveAssemblyReference.cache
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.Client.resources
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.Properties.Resources.resources
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.GenerateResource.Cache
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.CoreCompileInputs.cache
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.exe
-C:\Users\çağrı\Documents\GitHub\CS-408-Project\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.pdb
-<<<<<<< HEAD
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
-=======
->>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.exe
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\bin\Debug\CS408_Client.pdb
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csprojResolveAssemblyReference.cache
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.Client.resources
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.Properties.Resources.resources
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.GenerateResource.Cache
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.exe
+C:\Users\ASUS\Desktop\CS408\CS408_Client\CS408_Client\obj\Debug\CS408_Client.pdb
