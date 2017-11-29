@@ -24,10 +24,12 @@ namespace CS408_Servre
 
             public Socket player_socket;
             public string username;
+            public bool in_game;
             public Player(Socket p, string un)
             {
                 player_socket = p;
                 username = un;
+                in_game = false;
             }
 
             public string GetName()
@@ -80,12 +82,17 @@ namespace CS408_Servre
 
         }
 
+        void SendString(string data, int player_no)
+        {
+            byte[] buffer = Encoding.Default.GetBytes(data); 
+            playerList[player_no].player_socket.Send(buffer);
+        }
+
         void sendMessage(string message, int player_no)
         {
 
-            byte[] buffer = Encoding.Default.GetBytes("0M" + message); //0M is a tag for a message
-            playerList[player_no].player_socket.Send(buffer);
-            richTextBox1.AppendText(Environment.NewLine +  "Message sent.");
+            SendString("1M" + message, player_no); //1M is the tag for a message
+            richTextBox1.AppendText(Environment.NewLine +  "Message sent to " + playerList[player_no].username);
 
 
         }
@@ -95,14 +102,14 @@ namespace CS408_Servre
             byte[] buffer = new byte[64];
             for (int i = 0; i < playerList.Count - 1; i++)
             {
-                buffer = Encoding.Default.GetBytes("1L" + playerList[i].GetName()); //1L is a tag for a player name
-                playerList[player_no].player_socket.Send(buffer);
+                SendString("1L" + playerList[i].GetName(), player_no);
                 
             }
-            buffer = Encoding.Default.GetBytes("2L" + playerList[playerList.Count-1].GetName()); //2L is a tag for the last player name
-            playerList[player_no].player_socket.Send(buffer);
 
+            SendString("2L" + playerList[playerList.Count -1].GetName(), player_no);  //2L is a tag for the last player name
         }
+
+        
 
         //this function will be used in the ThrAccept
         //so that new clients will be able to connect even if server is busy (with sending messages)
@@ -163,26 +170,88 @@ namespace CS408_Servre
                     //0M is a message to the lobby from a player
                     //0L is a request from the player for the player list
                     //0I is an invitation from a player
+                    //2I is the response to an invitation
+                    //4I is surrender from a player
+                    string message = raw_message.Substring(2, raw_message.IndexOf("\0"));
                     if (control == "0M")
                     {
-                        raw_message = raw_message.Substring(0, raw_message.IndexOf("\0")); 
+                        
                         string text = username + ": " + raw_message;
                         richTextBox1.AppendText(Environment.NewLine + text);
                     }
 
-                    if(control == "0L")
+                    else if(control == "0L")
                     {
                         richTextBox1.AppendText(Environment.NewLine + "List request is received from " + username);
                         sendList(CheckName(username));
                         richTextBox1.AppendText(Environment.NewLine + "List is sent to " + username);
                     }
-                    if(control == "0I")
+                    else if(control == "0I")
                     {
+                        int rno = CheckName(message);
+                        if(rno == -1)
+                        {
+                            sendMessage("\nPlayer was not found :(", CheckName(username));
+                        }
                         richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username);
-                       // not completed kafa yetmedi
+                        SendInvitation(username, message); //message is receipient username in this case
 
                     }
-                
+
+                    else if(control == "2I")
+                    {
+                        string inviter_name = message.Substring(2, message.Length - 3);
+                        int inviter_no = CheckName(inviter_name);   
+                        string approval = message.Substring(message.Length - 2, 1); // substring is y/n depending on the answer of the invitation receiver
+                        if(inviter_no == -1)
+                        {
+                            sendMessage("Sorry, player is disconnected.\n", CheckName(username));
+                        }
+                        else if (playerList[inviter_no].in_game == true)
+                        {
+                            sendMessage("Sorry, player is already in game.\n", CheckName(username));
+
+                        }
+                        else
+                        {
+                            if(approval == "n")
+                            {
+                                sendMessage(username +" did not accept your invitation.\n", inviter_no);
+                            }
+
+                            else if(approval == "y")
+                            {
+                                int invited_no = CheckName(username);
+                                inviter_no = CheckName(inviter_name);
+                                SendString("3I" + inviter_name, invited_no);
+                                SendString("3I" + username, inviter_no);
+                                playerList[invited_no].in_game = true;
+                                playerList[invited_no].in_game = true;
+
+                                //
+
+
+                            }
+                        }
+
+                       
+                    }
+                    else if (control == "4I")
+                    {
+                        
+                        string opponent_name = message.Substring(2); //substring is opponent's name
+                        int user_no = CheckName(username);
+                        int opponent_no = CheckName(opponent_name);
+                        if (playerList[opponent_no].in_game && playerList[opponent_no].in_game) //check is added in case surrender moments are very close
+                        {
+                            SendString("5I" + opponent_name, user_no);
+                            SendString("5I" + opponent_name, opponent_no);
+                            richTextBox1.AppendText(Environment.NewLine + username + "-" + opponent_name + " winner is " + opponent_name);
+                            richTextBox1.AppendText(Environment.NewLine + "Match result is sent to " + username + " and " + opponent_name);
+                            playerList[user_no].in_game = false;
+                            playerList[opponent_no].in_game = false;
+                        }
+                    }
                 }
                 catch
                 {
@@ -207,12 +276,16 @@ namespace CS408_Servre
         }
 
         //new function to send invitation
-        void sendInvitation(string sname, int player_no) //sname is the name of the player who sent the invitation 
+        void SendInvitation(string sname, string rname) //sname is the name of the player who sent the invitation 
         {
-            string rname = playerList[player_no].GetName(); //rname is the name of the player who receives the invitation
-            byte[] buffer = Encoding.Default.GetBytes("0I" + sname); //0I is a tag for the invitation
-            playerList[player_no].player_socket.Send(buffer);
-            richTextBox1.AppendText(Environment.NewLine + "Invitation sent to ." + rname);
+            int player_no = CheckName(rname);
+            SendString("1I" + sname, player_no); //1I is a tag for the invitation
+            richTextBox1.AppendText(Environment.NewLine + "From " + sname + " invitation sent to " + rname);
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }
