@@ -247,8 +247,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 <<<<<<< HEAD
+<<<<<<< HEAD
             this.ClientSize = new System.Drawing.Size(507, 435);
             this.Controls.Add(this.button_Surrender);
+=======
+            this.ClientSize = new System.Drawing.Size(676, 535);
+>>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
 =======
             this.ClientSize = new System.Drawing.Size(676, 535);
 >>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
