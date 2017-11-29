@@ -20,6 +20,7 @@ namespace CS408_Client
             CheckForIllegalCrossThreadCalls = false;
         }
 
+        string opponent = "";
         bool terminating = false;
         static Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         
@@ -107,6 +108,9 @@ namespace CS408_Client
                     //1L is an element of the list of players
                     //2L is the last element of the list of players
                     //1M is a message from the server that is broadcast
+                    //1I is an invitation from the server
+                    //3I is a message from the server saying that the game has started
+                    //5I is a message from the server stating the winner of the game
                     if (raw_message.Substring(0, 2) == "1L")
                     {
                         player_list.AppendText(raw_message.Substring(2));
@@ -120,6 +124,19 @@ namespace CS408_Client
                     {
                         player_list.AppendText(raw_message.Substring(2));
                     }
+                    if(control == "1I")
+                    {
+                        receiveInvitation(raw_message.Substring(2));
+                    }
+                    if(control == "3I")
+                    {
+                        opponent = raw_message.Substring(2);
+                    }
+                    if(control == "5I")
+                    {
+                        opponent = "";
+                    }
+
                 }
                 catch
                 {
@@ -132,7 +149,7 @@ namespace CS408_Client
             }
 
         }
-
+        
         private void button_Send_Click(object sender, EventArgs e) //a function to send messages between players
         {
 
@@ -182,13 +199,51 @@ namespace CS408_Client
             richTextBox.AppendText("Player list request sent.\n");
         }
 
-        private void sendInvitation(string username)
+        private void sendInvitation(string username) // username is the receiver's name
         {
+            try
+            {
+                byte[] buffer = Encoding.Default.GetBytes("0I" + username); //0I is a tag for an invitation
+                clientSocket.Send(buffer);
+                richTextBox.AppendText("Invitation sent.\n");
+            }
+            catch
+            {
+                terminating = true;
+                clientSocket.Close();
+                richTextBox.AppendText("ERROR: Invitation could not be sent.\n");
+            }
 
-            byte[] buffer = Encoding.Default.GetBytes("0I" + username); //0I is a tag for an invitation
-            clientSocket.Send(buffer);
-            richTextBox.AppendText("Invitation sent.\n");
+        }
 
+        private void sendResponse(string un, string res)
+        {
+            try
+            {
+                byte[] buffer = Encoding.Default.GetBytes("2I" + un + res); //2I is the tag for the user un's response to the invitation
+                clientSocket.Send(buffer);
+                richTextBox.AppendText("Your response is sent to the server.\n");
+            }
+            catch
+            {
+                terminating = true;
+                clientSocket.Close();
+                richTextBox.AppendText("ERROR: Your response could not be sent.\n");
+            }
+        }
+
+        private void receiveInvitation(string username) // username is the name of the sender of an invitation
+        {
+            DialogResult dialogResult = MessageBox.Show("Do you accept? ", username + " sent you an invitation", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                sendResponse(username, "y");
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                sendResponse(username, "n");
+            }
+            
         }
 
         private void button_Invite_Click(object sender, EventArgs e)
@@ -207,5 +262,32 @@ namespace CS408_Client
                 richTextBox.AppendText("ERROR: Invitation could not be sent .\n");
             }
         }
+
+<<<<<<< HEAD
+        private void button_Invite_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_Send_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_Surrender_Click(object sender, EventArgs e)
+        {
+            if (opponent != "")
+            {
+                byte[] buffer = Encoding.Default.GetBytes("4I" + opponent); //Sending the name of the opponent to the server
+                clientSocket.Send(buffer);
+            }
+
+        }
+=======
+        private void Client_Load(object sender, EventArgs e)
+        {
+
+        }
+>>>>>>> 3b1086c378bae835597874446f94f1cd2ef62f62
     }
 }
