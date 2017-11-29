@@ -73,6 +73,10 @@ namespace Client
         }
         private void receiveInvitation(string username) // username is the name of the sender of an invitation
         {
+            richTextBox.AppendText("Invitation received from " + username + "\n");
+            Pop_up invitation = new Pop_up();
+            DialogResult newdialogResult = invitation.ShowDialog();
+            /*
             DialogResult dialogResult = MessageBox.Show("Do you accept? ", username + " sent you an invitation", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
@@ -82,6 +86,17 @@ namespace Client
             {
                 sendResponse(username, "n");
             }
+            */
+            if(newdialogResult == DialogResult.Yes)
+            {
+                sendResponse(username, "y");
+            }
+
+            else if (newdialogResult == DialogResult.No)
+            {
+                sendResponse(username, "n");
+            }
+
 
         }
 
@@ -112,26 +127,26 @@ namespace Client
                     //5I is a message from the server stating the winner of the game
                     if (raw_message.Substring(0, 2) == "1L")
                     {
-                        player_list.AppendText(raw_message.Substring(2));
+                        player_list.AppendText(Environment.NewLine + raw_message.Substring(2));
                     }
-                    if (control == "2L")
+                    else if (control == "2L")
                     {
                         player_list.AppendText(raw_message.Substring(2));
                         player_list.AppendText("Player list is received.\n");
                     }
-                    if (control == "1M")
+                    else if (control == "1M")
                     {
                         player_list.AppendText(raw_message.Substring(2));
                     }
-                    if (control == "1I")
+                    else if (control == "1I")
                     {
                         receiveInvitation(raw_message.Substring(2));
                     }
-                    if (control == "3I")
+                   else if (control == "3I")
                     {
                         opponent = raw_message.Substring(2);
                     }
-                    if (control == "5I")
+                    else if (control == "5I")
                     {
                         opponent = "";
                     }
@@ -213,6 +228,9 @@ namespace Client
 
             try
             {
+#if DEBUG
+                richTextBox.AppendText(username + "\n");
+#endif
                 sendInvitation(username);
             }
             catch
@@ -235,6 +253,11 @@ namespace Client
                 byte[] buffer = Encoding.Default.GetBytes("4I" + opponent); //Sending the name of the opponent to the server
                 clientSocket.Send(buffer);
             }
+        }
+
+        private void Client_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

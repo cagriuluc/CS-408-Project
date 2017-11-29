@@ -225,7 +225,7 @@ namespace CS408_Servre
                                 playerList[invited_no].in_game = true;
                                 playerList[invited_no].in_game = true;
 
-                                //
+                                
 
 
                             }
@@ -287,6 +287,11 @@ namespace CS408_Servre
         }
 
         private void richTextBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
         {
 
         }
