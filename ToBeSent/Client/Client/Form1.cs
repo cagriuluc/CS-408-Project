@@ -23,12 +23,32 @@ namespace Client
         string opponent = "";
         bool terminating = false;
         static Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+        string username = "";
         void sendUsername(string name)
         {
 
             byte[] buffer = Encoding.Default.GetBytes(name);
             clientSocket.Send(buffer);
+
+        }
+        public string CropString(string s)
+        {
+            string result = "";
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] != '\0')
+                {
+                    result += s[i];
+                }
+                else if (s[i] == '\0')
+                {
+                    return result;
+                }
+            }
+
+            return result;
+
 
         }
         private void sendInvitation(string username) // username is the receiver's name
@@ -51,7 +71,7 @@ namespace Client
         {
             try
             {
-                byte[] buffer = Encoding.Default.GetBytes("2I" + un + res); //2I is the tag for the user un's response to the invitation
+                byte[] buffer = Encoding.Default.GetBytes("2I" + res + un); //2I is the tag for the user un's response to the invitation
                 clientSocket.Send(buffer);
                 richTextBox.AppendText("Your response is sent to the server.\n");
             }
@@ -119,6 +139,7 @@ namespace Client
                     }
                     string raw_message = Encoding.Default.GetString(buffer);
                     string control = raw_message.Substring(0, 2);
+                    string message = CropString(raw_message.Substring(2));
                     //1L is an element of the list of players
                     //2L is the last element of the list of players
                     //1M is a message from the server that is broadcast
@@ -127,27 +148,40 @@ namespace Client
                     //5I is a message from the server stating the winner of the game
                     if (raw_message.Substring(0, 2) == "1L")
                     {
-                        player_list.AppendText(Environment.NewLine + raw_message.Substring(2));
+                        player_list.AppendText( message + "\n");
                     }
                     else if (control == "2L")
                     {
-                        player_list.AppendText(raw_message.Substring(2));
-                        player_list.AppendText("Player list is received.\n");
+                        player_list.AppendText(message + "\n");
+                          richTextBox.AppendText("Player list is received.\n");
+
                     }
                     else if (control == "1M")
                     {
-                        player_list.AppendText(raw_message.Substring(2));
+                        
+                        richTextBox.AppendText(message);
                     }
                     else if (control == "1I")
                     {
-                        receiveInvitation(raw_message.Substring(2));
+                        receiveInvitation(message);
                     }
                    else if (control == "3I")
                     {
-                        opponent = raw_message.Substring(2);
+                        opponent = message;
+                        richTextBox.AppendText("Your game with " + opponent + " started!\n");
                     }
                     else if (control == "5I")
                     {
+                        if(message == username)
+                        {
+                            richTextBox.AppendText("You won the game against " + opponent + "\n");
+                        }
+
+                        else
+                        {
+                            richTextBox.AppendText("You lost the game against " + opponent + " :(\n");
+                        }
+                        
                         opponent = "";
                     }
 
@@ -169,6 +203,7 @@ namespace Client
             try
             {
                 string userName = textBox_Username.Text;
+                username = userName; //global username is set
                 string serverIP = textBox_IP.Text;
                 int port = Convert.ToInt32(textBox_Port.Text);
                 Thread receiveThread;
@@ -252,6 +287,7 @@ namespace Client
             {
                 byte[] buffer = Encoding.Default.GetBytes("4I" + opponent); //Sending the name of the opponent to the server
                 clientSocket.Send(buffer);
+                richTextBox.AppendText("Your surrender is sent :(\n");
             }
         }
 

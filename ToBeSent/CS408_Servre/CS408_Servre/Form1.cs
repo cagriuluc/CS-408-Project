@@ -54,12 +54,48 @@ namespace CS408_Servre
             CheckForIllegalCrossThreadCalls = false;
         }
 
+        public string CropString(string s)
+        {
+            string result = "";
+
+            for(int i = 0; i < s.Length; i++)
+            {
+                if(s[i] != '\0')
+                {
+                    result += s[i];
+                }
+                else if(s[i] == '\0')
+                {
+                    return result;
+                }
+            }
+
+            return result;
+
+
+        }
+
         public int CheckName(string un)
         {
-            for(int i = 0; i < playerList.Count; i++)
+#if MAN_BUG
+            richTextBox1.AppendText(Environment.NewLine + playerList.Count);
+
+            richTextBox1.AppendText(Environment.NewLine + un);
+
+            
+#endif
+            for (int i = 0; i < playerList.Count; i++)
             {
-                if(playerList[i].GetName() == un ) 
+#if MAN_BUG
+                richTextBox1.AppendText(Environment.NewLine + i);
+
+                richTextBox1.AppendText(Environment.NewLine + playerList[i].GetName());
+
+
+#endif
+                if (playerList[i].GetName() == un ) 
                 {
+
                     return i;
                 }
             }
@@ -72,6 +108,7 @@ namespace CS408_Servre
 
             port_no = Convert.ToInt32(port_text_box.Text);
             
+
             server.Bind(new IPEndPoint(IPAddress.Any, port_no));
             server.Listen(3);
             richTextBox1.AppendText(Environment.NewLine + "Started listening to Port " + port_no);
@@ -122,13 +159,19 @@ namespace CS408_Servre
                     Socket current = server.Accept();
                     byte[] buffer = new byte[64];
                     int rec = current.Receive(buffer);
-                    string uname = Encoding.Default.GetString(buffer);
+                    string uname = CropString(Encoding.Default.GetString(buffer));
+#if MAN_BUG
+                    richTextBox1.AppendText(Environment.NewLine + uname);
+                    richTextBox1.AppendText(Environment.NewLine + "length: " + uname.Length);
+#endif
+
                     if (CheckName(uname) != -1)
                     {
                         richTextBox1.AppendText(Environment.NewLine + "New player could not be added. Reason: Same username with anothe player.");
                         current.Close();
                         continue;
                     }
+
                     Player newPlayer = new Player(current, uname);
                     playerList.Add(newPlayer);
                     richTextBox1.AppendText(Environment.NewLine + "New player with username " + uname + " added.");
@@ -172,7 +215,7 @@ namespace CS408_Servre
                     //0I is an invitation from a player
                     //2I is the response to an invitation
                     //4I is surrender from a player
-                    string message = raw_message.Substring(2);
+                    string message = CropString(raw_message.Substring(2));
                     if (control == "0M")
                     {
                         
@@ -189,11 +232,15 @@ namespace CS408_Servre
                     else if(control == "0I")
                     {
                         int rno = CheckName(message);
+                        
                         if (rno == -1)
                         {
-#if DEBUG
-
+#if MAN_BUG
+                            richTextBox1.AppendText(Environment.NewLine + CheckName("cagri"));
                             richTextBox1.AppendText(Environment.NewLine + raw_message + Environment.NewLine);
+                            richTextBox1.AppendText(Environment.NewLine + message + Environment.NewLine);
+                            richTextBox1.AppendText(Environment.NewLine + rno + Environment.NewLine);
+
 #endif
                             sendMessage("\nPlayer was not found :(", CheckName(username));
                             richTextBox1.AppendText(Environment.NewLine + "Unsuccessful invite from " + username + ", player is not connected");
@@ -209,18 +256,23 @@ namespace CS408_Servre
                         {
                             richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username + " to " + message);
                             SendInvitation(username, message); //message is receipient username in this case
-                            richTextBox1.AppendText(Environment.NewLine + "Invitation sent to " + message + " from " + username);
+                           
                         }
                     }
 
                     else if(control == "2I")
                     {
-                        string inviter_name = message.Substring(2, message.Length - 3);
-                        int inviter_no = CheckName(inviter_name);   
-                        string approval = message.Substring(message.Length - 2, 1); // substring is y/n depending on the answer of the invitation receiver
-                        if(inviter_no == -1)
+                        
+                          
+                        string approval = message.Substring(0,1); // substring is y/n depending on the answer of the invitation receiver
+                        string inviter_name = message.Substring(1);
+                        int inviter_no = CheckName(inviter_name);
+                       
+                        if (inviter_no == -1)
                         {
                             sendMessage("Sorry, player is disconnected.\n", CheckName(username));
+                            richTextBox1.AppendText(Environment.NewLine + "Inviter was not found: " + inviter_name);
+
                         }
                         else if (playerList[inviter_no].in_game == true)
                         {
@@ -254,7 +306,7 @@ namespace CS408_Servre
                     else if (control == "4I")
                     {
                         
-                        string opponent_name = message.Substring(2); //substring is opponent's name
+                        string opponent_name = message; //substring is opponent's name
                         int user_no = CheckName(username);
                         int opponent_no = CheckName(opponent_name);
                         if (playerList[opponent_no].in_game && playerList[opponent_no].in_game) //check is added in case surrender moments are very close
@@ -272,8 +324,11 @@ namespace CS408_Servre
                 {
                     if (!terminating)
                         richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
+
                     n.Close();
-                    playerList.Remove(playerList[CheckName(username)]);
+                  
+                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + playerList.Remove(playerList[CheckName(username)]));
+                   
                     connected = false;
                 }
             }
