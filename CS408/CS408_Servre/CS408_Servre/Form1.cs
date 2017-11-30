@@ -108,6 +108,7 @@ namespace CS408_Servre
 
             port_no = Convert.ToInt32(port_text_box.Text);
             
+
             server.Bind(new IPEndPoint(IPAddress.Any, port_no));
             server.Listen(3);
             richTextBox1.AppendText(Environment.NewLine + "Started listening to Port " + port_no);
@@ -255,7 +256,7 @@ namespace CS408_Servre
                         {
                             richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username + " to " + message);
                             SendInvitation(username, message); //message is receipient username in this case
-                            richTextBox1.AppendText(Environment.NewLine + "Invitation sent to " + message + " from " + username);
+                           
                         }
                     }
 
@@ -323,8 +324,11 @@ namespace CS408_Servre
                 {
                     if (!terminating)
                         richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
+
                     n.Close();
-                    playerList.Remove(playerList[CheckName(username)]);
+                  
+                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + playerList.Remove(playerList[CheckName(username)]));
+                   
                     connected = false;
                 }
             }
