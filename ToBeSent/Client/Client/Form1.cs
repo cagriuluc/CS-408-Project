@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define MAN_BUG
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net.Sockets;
 using System.Windows.Forms;
+
+
 
 namespace Client
 {
@@ -91,25 +94,24 @@ namespace Client
 
 
         }
-        private void receiveInvitation(string username) // username is the name of the sender of an invitation
+        public void receiveInvitation(string username) // username is the name of the sender of an invitation
         {
             richTextBox.AppendText("Invitation received from " + username + "\n");
-            Pop_up invitation = new Pop_up();
+            Pop_up invitation = new Pop_up(username);
             DialogResult newdialogResult = invitation.ShowDialog();
-            /*
-            DialogResult dialogResult = MessageBox.Show("Do you accept? ", username + " sent you an invitation", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                sendResponse(username, "y");
-            }
-            else if (dialogResult == DialogResult.No)
-            {
-                sendResponse(username, "n");
-            }
-            */
+            
             if(newdialogResult == DialogResult.Yes)
             {
-                sendResponse(username, "y");
+                if (opponent == "")
+                {
+                    sendResponse(username, "y");
+                    opponent = username;
+                }
+
+                else
+                {
+                    richTextBox.AppendText("You are already in game, cannot accept invitation" + "\n");
+                }
             }
 
             else if (newdialogResult == DialogResult.No)
@@ -117,7 +119,8 @@ namespace Client
                 sendResponse(username, "n");
             }
 
-
+            
+            
         }
 
 
@@ -153,7 +156,10 @@ namespace Client
                     else if (control == "2L")
                     {
                         player_list.AppendText(message + "\n");
-                          richTextBox.AppendText("Player list is received.\n");
+#if MAN_BUG
+                        richTextBox.AppendText("Message from server: " + raw_message + "\n");
+#endif
+                        richTextBox.AppendText("Player list is received.\n");
 
                     }
                     else if (control == "1M")
@@ -163,7 +169,12 @@ namespace Client
                     }
                     else if (control == "1I")
                     {
-                        receiveInvitation(message);
+                        Thread thrInvitation;
+                        thrInvitation = new Thread( () => receiveInvitation(message));
+                        thrInvitation.IsBackground = true;
+                        thrInvitation.Start();
+                        
+                        
                     }
                    else if (control == "3I")
                     {
@@ -286,6 +297,9 @@ namespace Client
             if (opponent != "")
             {
                 byte[] buffer = Encoding.Default.GetBytes("4I" + opponent); //Sending the name of the opponent to the server
+#if MAN_BUG
+                 richTextBox.AppendText("Surrender sent opponent : " + opponent + "\n");
+#endif
                 clientSocket.Send(buffer);
                 richTextBox.AppendText("Your surrender is sent :(\n");
             }

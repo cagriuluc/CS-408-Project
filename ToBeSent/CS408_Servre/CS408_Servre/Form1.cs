@@ -141,7 +141,9 @@ namespace CS408_Servre
             {
                 SendString("1L" + playerList[i].GetName(), player_no);
                 System.Threading.Thread.Sleep(30);
+                //If this is not in place, two messages is taken as 1
             }
+            
 
             SendString("2L" + playerList[playerList.Count -1].GetName(), player_no);  //2L is a tag for the last player name
         }
@@ -293,11 +295,7 @@ namespace CS408_Servre
                                 SendString("3I" + inviter_name, invited_no);
                                 SendString("3I" + username, inviter_no);
                                 playerList[invited_no].in_game = true;
-                                playerList[invited_no].in_game = true;
-
-                                //
-
-
+                                playerList[inviter_no].in_game = true;
                             }
                         }
 

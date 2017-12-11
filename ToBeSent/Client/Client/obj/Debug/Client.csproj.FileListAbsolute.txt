@@ -1,0 +1,10 @@
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\bin\Debug\Client.exe
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\bin\Debug\Client.pdb
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.Client.resources
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.Pop_up.resources
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.Properties.Resources.resources
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.exe
+C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\Client\Client\obj\Debug\Client.pdb

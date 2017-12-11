@@ -62,6 +62,7 @@
             this.label1.Size = new System.Drawing.Size(198, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "A player sent you an invitation";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Pop_up
             // 
