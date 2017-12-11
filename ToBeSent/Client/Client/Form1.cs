@@ -247,6 +247,7 @@ namespace Client
             byte[] buffer = Encoding.Default.GetBytes("0L"); //0L is a tag for the request of list of the players
             clientSocket.Send(buffer);
             richTextBox.AppendText("Player list request sent.\n");
+            player_list.ResetText();
         }
 
         private void button_Send_Click(object sender, EventArgs e)
