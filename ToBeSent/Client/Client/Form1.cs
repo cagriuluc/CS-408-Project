@@ -1,4 +1,4 @@
-﻿#define MAN_BUG
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -235,6 +235,14 @@ namespace Client
         }
 
         private void button_Disconnect_Click(object sender, EventArgs e)
+        {
+            richTextBox.AppendText("Disconnecting from the server.\n");
+            terminating = true;
+            clientSocket.Dispose();
+            clientSocket.Close();
+        }
+
+        private void Form1_Closing(object sender, EventArgs e)
         {
             richTextBox.AppendText("Disconnecting from the server.\n");
             terminating = true;

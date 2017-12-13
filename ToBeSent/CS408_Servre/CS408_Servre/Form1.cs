@@ -25,11 +25,13 @@ namespace CS408_Servre
             public Socket player_socket;
             public string username;
             public bool in_game;
+            public int score;
             public Player(Socket p, string un)
             {
                 player_socket = p;
                 username = un;
                 in_game = false;
+                score = 0;
             }
 
             public string GetName()
@@ -39,6 +41,44 @@ namespace CS408_Servre
             }
         }
 
+        public class Game
+        {
+            
+            public string player1;
+            public string player2;
+            public int temp_number;
+            public int temp_guess_1;
+            public int temp_guess_2;
+            public int score1;
+            public int score2;
+
+            public Game(string first, string second) 
+            {
+                player1 = first;
+                player2 = second;
+
+                temp_guess_1 = -101;
+                temp_guess_2 = -101; 
+                score1 = 0;
+                score2 = 0;
+            }
+
+        }
+
+        int CheckGame(string gamer)
+        {
+            for(int i = 0; i < activeGames.Count; i++)
+            {
+                if(gamer == activeGames[i].player1 || gamer == activeGames[i].player2)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        List<Game> activeGames = new List<Game>();
         bool listening = false;
         bool terminating = false;
         bool accept = true;
@@ -193,6 +233,7 @@ namespace CS408_Servre
             }
         }
 
+
         private void Receive()
         {
             bool connected = true;
@@ -209,6 +250,8 @@ namespace CS408_Servre
                     {
                         throw new SocketException();
                     }
+
+                   
 
                     string raw_message = Encoding.Default.GetString(buffer);
                     string control = raw_message.Substring(0, 2);
@@ -296,11 +339,13 @@ namespace CS408_Servre
                                 SendString("3I" + username, inviter_no);
                                 playerList[invited_no].in_game = true;
                                 playerList[inviter_no].in_game = true;
+                                activeGames.Add(new Game(inviter_name, username));
                             }
                         }
 
                        
                     }
+                    
                     else if (control == "4I")
                     {
                         
@@ -315,6 +360,8 @@ namespace CS408_Servre
                             richTextBox1.AppendText(Environment.NewLine + "Match result is sent to " + username + " and " + opponent_name);
                             playerList[user_no].in_game = false;
                             playerList[opponent_no].in_game = false;
+                            activeGames.Remove(activeGames[CheckGame(username)]);
+                            playerList[opponent_no].score++;
                         }
                     }
                 }
@@ -323,10 +370,35 @@ namespace CS408_Servre
                     if (!terminating)
                         richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
 
+                    if(playerList[CheckName(username)].in_game == true)
+                    {
+                        int game_no = CheckGame(username);
+                        if(activeGames[game_no].player1 == username)
+                        {
+
+                            int op_no = CheckName(activeGames[game_no].player2);
+                            if(op_no != -1)
+                            {
+                                playerList[op_no].score++;
+                                playerList[op_no].in_game = false;
+                            }
+                        }
+                        else
+                        {
+                            int op_no = CheckName(activeGames[game_no].player1);
+                            if (op_no != -1)
+                            {
+                                playerList[op_no].score++;
+                                playerList[op_no].in_game = false;
+                            }
+                        }
+                    }
+
                     n.Close();
-                  
-                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + playerList.Remove(playerList[CheckName(username)]));
-                   
+                    bool result = playerList.Remove(playerList[CheckName(username)]);
+#if MAN_BUG
+                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + result);
+#endif
                     connected = false;
                 }
             }
@@ -356,5 +428,7 @@ namespace CS408_Servre
         {
 
         }
+
+      
     }
 }
