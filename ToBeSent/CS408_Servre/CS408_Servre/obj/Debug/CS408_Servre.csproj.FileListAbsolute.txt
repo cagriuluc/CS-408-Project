@@ -8,3 +8,13 @@ C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Se
 C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csproj.CoreCompileInputs.cache
 C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.exe
 C:\Users\çağrı\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.pdb
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.exe.config
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.exe
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\bin\Debug\CS408_Servre.pdb
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csprojResolveAssemblyReference.cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.Form1.resources
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.Properties.Resources.resources
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csproj.GenerateResource.Cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.exe
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\ToBeSent\CS408_Servre\CS408_Servre\obj\Debug\CS408_Servre.pdb

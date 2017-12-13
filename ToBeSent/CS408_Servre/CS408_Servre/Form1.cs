@@ -264,7 +264,7 @@ namespace CS408_Servre
                     if (control == "0M")
                     {
                         
-                        string text = username + ": " + raw_message;
+                        string text = username + ": " + message;
                         richTextBox1.AppendText(Environment.NewLine + text);
                     }
 
