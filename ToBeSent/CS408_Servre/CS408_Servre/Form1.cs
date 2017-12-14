@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define MAN_BUG
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -65,6 +66,12 @@ namespace CS408_Servre
 
         }
 
+        public int MakeRandom()
+        {
+            return NumGenerator.Next(1, 100);
+        }
+
+
         int CheckGame(string gamer)
         {
             for(int i = 0; i < activeGames.Count; i++)
@@ -77,7 +84,7 @@ namespace CS408_Servre
 
             return -1;
         }
-
+        Random NumGenerator = new Random();
         List<Game> activeGames = new List<Game>();
         bool listening = false;
         bool terminating = false;
@@ -87,7 +94,7 @@ namespace CS408_Servre
         int port_no;
         Thread thrAccept;
         //these are taken from Lab 2 of CS 408 course
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -156,7 +163,6 @@ namespace CS408_Servre
             thrAccept.Start();
             thrAccept.IsBackground = true;
             listening = true;
-
         }
 
         void SendString(string data, int player_no)
@@ -260,6 +266,7 @@ namespace CS408_Servre
                     //0I is an invitation from a player
                     //2I is the response to an invitation
                     //4I is surrender from a player
+                    //1G is a guess from a player
                     string message = CropString(raw_message.Substring(2));
                     if (control == "0M")
                     {
@@ -340,6 +347,8 @@ namespace CS408_Servre
                                 playerList[invited_no].in_game = true;
                                 playerList[inviter_no].in_game = true;
                                 activeGames.Add(new Game(inviter_name, username));
+                                activeGames[activeGames.Count - 1].temp_number = MakeRandom();
+
                             }
                         }
 
@@ -362,6 +371,57 @@ namespace CS408_Servre
                             playerList[opponent_no].in_game = false;
                             activeGames.Remove(activeGames[CheckGame(username)]);
                             playerList[opponent_no].score++;
+
+                        }
+                    }
+
+                    else if (control == "1G")
+                    {
+                        int game_no = CheckGame(username);
+
+                        if (game_no != -1)
+                        {
+                            if (username == activeGames[game_no].player1)
+                            {
+                                if (activeGames[game_no].temp_guess_2 == -101)
+                                {
+                                    activeGames[game_no].temp_guess_1 = Convert.ToInt32(message);
+                                }
+
+                                else
+                                {
+                                    if(Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) < Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_2))
+                                    {
+                                        //This user won the round
+                                        activeGames[game_no].score1++;
+                                        richTextBox1.AppendText("Round won by " + username + " against " + activeGames[game_no].player2);
+                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
+                                    }
+
+                                    else if(Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) > Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_2))
+                                    {
+                                        //Opponent won the round
+                                        activeGames[game_no].score2++;
+                                        richTextBox1.AppendText("Round won by " + activeGames[game_no].player2 + " against " + username);
+                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
+                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                    }
+
+                                    else
+                                    {
+                                        richTextBox1.AppendText("Round is tie between " + activeGames[game_no].player2 + " and " + username);
+                                        sendMessage("Round is tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
+                                        sendMessage("Round is tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                    }
+                                }
+                            }
+
+                        }
+
+                        else
+                        {
+
                         }
                     }
                 }
@@ -381,6 +441,9 @@ namespace CS408_Servre
                             {
                                 playerList[op_no].score++;
                                 playerList[op_no].in_game = false;
+                                sendMessage("Your opponent left the game... \n", op_no);
+                                SendString("5I" + activeGames[game_no].player2, op_no);
+
                             }
                         }
                         else
@@ -390,8 +453,11 @@ namespace CS408_Servre
                             {
                                 playerList[op_no].score++;
                                 playerList[op_no].in_game = false;
+                                sendMessage("Your opponent left the game... \n", op_no);
+                                SendString("5I" + activeGames[game_no].player1, op_no);
                             }
                         }
+                        activeGames.Remove(activeGames[game_no]);
                     }
 
                     n.Close();

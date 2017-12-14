@@ -225,6 +225,7 @@ namespace Client
                 sendUsername(textBox_Username.Text);
                 receiveThread = new Thread(new ThreadStart(Receive));
                 receiveThread.Start();
+                receiveThread.IsBackground = true;
                 richTextBox.AppendText("Connected to the server.\n");
             }
             catch
@@ -242,6 +243,7 @@ namespace Client
             clientSocket.Close();
         }
 
+        /*
         private void Form1_Closing(object sender, EventArgs e)
         {
             richTextBox.AppendText("Disconnecting from the server.\n");
@@ -249,6 +251,7 @@ namespace Client
             clientSocket.Dispose();
             clientSocket.Close();
         }
+        */
 
         private void button_List_Click(object sender, EventArgs e)
         {
