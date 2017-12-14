@@ -1,5 +1,4 @@
-﻿#define MAN_BUG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +15,7 @@ namespace CS408_Servre
 
 
 {
-    
+
 
     public partial class Form1 : Form
     {
@@ -26,13 +25,13 @@ namespace CS408_Servre
             public Socket player_socket;
             public string username;
             public bool in_game;
-            public int score;
+            public int globalPoint;
             public Player(Socket p, string un)
             {
                 player_socket = p;
                 username = un;
                 in_game = false;
-                score = 0;
+                globalPoint = 0;
             }
 
             public string GetName()
@@ -40,52 +39,13 @@ namespace CS408_Servre
                 return username;
 
             }
-        }
 
-        public class Game
-        {
-            
-            public string player1;
-            public string player2;
-            public int temp_number;
-            public int temp_guess_1;
-            public int temp_guess_2;
-            public int score1;
-            public int score2;
-
-            public Game(string first, string second) 
+            public int GetPoint()
             {
-                player1 = first;
-                player2 = second;
-
-                temp_guess_1 = -101;
-                temp_guess_2 = -101; 
-                score1 = 0;
-                score2 = 0;
+                return globalPoint;
             }
-
         }
 
-        public int MakeRandom()
-        {
-            return NumGenerator.Next(1, 100);
-        }
-
-
-        int CheckGame(string gamer)
-        {
-            for(int i = 0; i < activeGames.Count; i++)
-            {
-                if(gamer == activeGames[i].player1 || gamer == activeGames[i].player2)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-        Random NumGenerator = new Random();
-        List<Game> activeGames = new List<Game>();
         bool listening = false;
         bool terminating = false;
         bool accept = true;
@@ -94,7 +54,7 @@ namespace CS408_Servre
         int port_no;
         Thread thrAccept;
         //these are taken from Lab 2 of CS 408 course
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -105,13 +65,13 @@ namespace CS408_Servre
         {
             string result = "";
 
-            for(int i = 0; i < s.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
-                if(s[i] != '\0')
+                if (s[i] != '\0')
                 {
                     result += s[i];
                 }
-                else if(s[i] == '\0')
+                else if (s[i] == '\0')
                 {
                     return result;
                 }
@@ -140,7 +100,7 @@ namespace CS408_Servre
 
 
 #endif
-                if (playerList[i].GetName() == un ) 
+                if (playerList[i].GetName() == un)
                 {
 
                     return i;
@@ -151,10 +111,10 @@ namespace CS408_Servre
 
         private void listen_button_Click(object sender, EventArgs e)
         {
-           
+
 
             port_no = Convert.ToInt32(port_text_box.Text);
-            
+
 
             server.Bind(new IPEndPoint(IPAddress.Any, port_no));
             server.Listen(3);
@@ -163,11 +123,12 @@ namespace CS408_Servre
             thrAccept.Start();
             thrAccept.IsBackground = true;
             listening = true;
+
         }
 
         void SendString(string data, int player_no)
         {
-            byte[] buffer = Encoding.Default.GetBytes(data); 
+            byte[] buffer = Encoding.Default.GetBytes(data);
             playerList[player_no].player_socket.Send(buffer);
         }
 
@@ -175,7 +136,7 @@ namespace CS408_Servre
         {
 
             SendString("1M" + message, player_no); //1M is the tag for a message
-            richTextBox1.AppendText(Environment.NewLine +  "Message sent to " + playerList[player_no].username);
+            richTextBox1.AppendText(Environment.NewLine + "Message sent to " + playerList[player_no].username);
 
 
         }
@@ -185,16 +146,14 @@ namespace CS408_Servre
             byte[] buffer = new byte[64];
             for (int i = 0; i < playerList.Count - 1; i++)
             {
-                SendString("1L" + playerList[i].GetName(), player_no);
+                SendString("1L" + playerList[i].GetName() + playerList[i].GetPoint(), player_no); //buraya playerList[i].GetPoint() ekledim
                 System.Threading.Thread.Sleep(30);
-                //If this is not in place, two messages is taken as 1
             }
-            
 
-            SendString("2L" + playerList[playerList.Count -1].GetName(), player_no);  //2L is a tag for the last player name
+            SendString("2L" + playerList[playerList.Count - 1].GetName(), player_no);  //2L is a tag for the last player name
         }
 
-        
+
 
         //this function will be used in the ThrAccept
         //so that new clients will be able to connect even if server is busy (with sending messages)
@@ -239,7 +198,6 @@ namespace CS408_Servre
             }
         }
 
-
         private void Receive()
         {
             bool connected = true;
@@ -257,8 +215,6 @@ namespace CS408_Servre
                         throw new SocketException();
                     }
 
-                   
-
                     string raw_message = Encoding.Default.GetString(buffer);
                     string control = raw_message.Substring(0, 2);
                     //0M is a message to the lobby from a player
@@ -266,25 +222,26 @@ namespace CS408_Servre
                     //0I is an invitation from a player
                     //2I is the response to an invitation
                     //4I is surrender from a player
-                    //1G is a guess from a player
+                    //1G is the beginning of the game
+                    //2G is the guess of a player
                     string message = CropString(raw_message.Substring(2));
                     if (control == "0M")
                     {
-                        
-                        string text = username + ": " + message;
+
+                        string text = username + ": " + raw_message;
                         richTextBox1.AppendText(Environment.NewLine + text);
                     }
 
-                    else if(control == "0L")
+                    else if (control == "0L")
                     {
                         richTextBox1.AppendText(Environment.NewLine + "List request is received from " + username);
                         sendList(CheckName(username));
                         richTextBox1.AppendText(Environment.NewLine + "List is sent to " + username);
                     }
-                    else if(control == "0I")
+                    else if (control == "0I")
                     {
                         int rno = CheckName(message);
-                        
+
                         if (rno == -1)
                         {
 #if MAN_BUG
@@ -296,7 +253,7 @@ namespace CS408_Servre
 #endif
                             sendMessage("\nPlayer was not found :(", CheckName(username));
                             richTextBox1.AppendText(Environment.NewLine + "Unsuccessful invite from " + username + ", player is not connected");
-                            
+
                         }
                         else if (playerList[rno].in_game == true)
                         {
@@ -308,18 +265,18 @@ namespace CS408_Servre
                         {
                             richTextBox1.AppendText(Environment.NewLine + "Invitation is received from " + username + " to " + message);
                             SendInvitation(username, message); //message is receipient username in this case
-                           
+
                         }
                     }
 
-                    else if(control == "2I")
+                    else if (control == "2I")
                     {
-                        
-                          
-                        string approval = message.Substring(0,1); // substring is y/n depending on the answer of the invitation receiver
+
+
+                        string approval = message.Substring(0, 1); // substring is y/n depending on the answer of the invitation receiver
                         string inviter_name = message.Substring(1);
                         int inviter_no = CheckName(inviter_name);
-                       
+
                         if (inviter_no == -1)
                         {
                             sendMessage("Sorry, player is disconnected.\n", CheckName(username));
@@ -333,31 +290,34 @@ namespace CS408_Servre
                         }
                         else
                         {
-                            if(approval == "n")
+                            if (approval == "n")
                             {
-                                sendMessage(username +" did not accept your invitation.\n", inviter_no);
+                                sendMessage(username + " did not accept your invitation.\n", inviter_no);
                             }
 
-                            else if(approval == "y")
+                            else if (approval == "y")
                             {
+
                                 int invited_no = CheckName(username);
                                 inviter_no = CheckName(inviter_name);
                                 SendString("3I" + inviter_name, invited_no);
                                 SendString("3I" + username, inviter_no);
                                 playerList[invited_no].in_game = true;
-                                playerList[inviter_no].in_game = true;
-                                activeGames.Add(new Game(inviter_name, username));
-                                activeGames[activeGames.Count - 1].temp_number = MakeRandom();
+                                playerList[invited_no].in_game = true;
+
+                                Random r = new Random(); // secretnum olusturuluyor, oyunculara notification yollaniyor
+                                int secretNumber = r.Next(0, 100);
+                                SendString("1G" + "Guess the secret number.\n" + inviter_name, invited_no);
+                                SendString("1G" + "Guess the secret number.\n" + inviter_name, inviter_no);
 
                             }
                         }
 
-                       
+
                     }
-                    
                     else if (control == "4I")
                     {
-                        
+
                         string opponent_name = message; //substring is opponent's name
                         int user_no = CheckName(username);
                         int opponent_no = CheckName(opponent_name);
@@ -369,60 +329,14 @@ namespace CS408_Servre
                             richTextBox1.AppendText(Environment.NewLine + "Match result is sent to " + username + " and " + opponent_name);
                             playerList[user_no].in_game = false;
                             playerList[opponent_no].in_game = false;
-                            activeGames.Remove(activeGames[CheckGame(username)]);
-                            playerList[opponent_no].score++;
-
                         }
                     }
-
-                    else if (control == "1G")
+                    else if (control == "2G")
                     {
-                        int game_no = CheckGame(username);
+                       string opponent_name = CropString(message.Substring())
 
-                        if (game_no != -1)
-                        {
-                            if (username == activeGames[game_no].player1)
-                            {
-                                if (activeGames[game_no].temp_guess_2 == -101)
-                                {
-                                    activeGames[game_no].temp_guess_1 = Convert.ToInt32(message);
-                                }
 
-                                else
-                                {
-                                    if(Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) < Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_2))
-                                    {
-                                        //This user won the round
-                                        activeGames[game_no].score1++;
-                                        richTextBox1.AppendText("Round won by " + username + " against " + activeGames[game_no].player2);
-                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
-                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
-                                    }
 
-                                    else if(Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) > Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_2))
-                                    {
-                                        //Opponent won the round
-                                        activeGames[game_no].score2++;
-                                        richTextBox1.AppendText("Round won by " + activeGames[game_no].player2 + " against " + username);
-                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
-                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
-                                    }
-
-                                    else
-                                    {
-                                        richTextBox1.AppendText("Round is tie between " + activeGames[game_no].player2 + " and " + username);
-                                        sendMessage("Round is tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
-                                        sendMessage("Round is tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
-                                    }
-                                }
-                            }
-
-                        }
-
-                        else
-                        {
-
-                        }
                     }
                 }
                 catch
@@ -430,41 +344,10 @@ namespace CS408_Servre
                     if (!terminating)
                         richTextBox1.AppendText(Environment.NewLine + username + " has disconnected...");
 
-                    if(playerList[CheckName(username)].in_game == true)
-                    {
-                        int game_no = CheckGame(username);
-                        if(activeGames[game_no].player1 == username)
-                        {
-
-                            int op_no = CheckName(activeGames[game_no].player2);
-                            if(op_no != -1)
-                            {
-                                playerList[op_no].score++;
-                                playerList[op_no].in_game = false;
-                                sendMessage("Your opponent left the game... \n", op_no);
-                                SendString("5I" + activeGames[game_no].player2, op_no);
-
-                            }
-                        }
-                        else
-                        {
-                            int op_no = CheckName(activeGames[game_no].player1);
-                            if (op_no != -1)
-                            {
-                                playerList[op_no].score++;
-                                playerList[op_no].in_game = false;
-                                sendMessage("Your opponent left the game... \n", op_no);
-                                SendString("5I" + activeGames[game_no].player1, op_no);
-                            }
-                        }
-                        activeGames.Remove(activeGames[game_no]);
-                    }
-
                     n.Close();
-                    bool result = playerList.Remove(playerList[CheckName(username)]);
-#if MAN_BUG
-                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + result);
-#endif
+
+                    richTextBox1.AppendText(Environment.NewLine + username + "is removed from the player list? " + playerList.Remove(playerList[CheckName(username)]));
+
                     connected = false;
                 }
             }
@@ -494,7 +377,5 @@ namespace CS408_Servre
         {
 
         }
-
-      
     }
 }
