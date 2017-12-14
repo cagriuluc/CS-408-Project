@@ -146,9 +146,14 @@ namespace Client
                     //1I is an invitation from the server
                     //3I is a message from the server saying that the game has started
                     //5I is a message from the server stating the winner of the game
-                    if (raw_message.Substring(0, 2) == "1L")
+                    if (control == "1L")
                     {
-                        player_list.AppendText(message + "\n");
+                        // Server sends a message of type 1L + digit number of the points + points + a player
+                        char temp = raw_message[2];  
+                        int numDigits = (int)Char.GetNumericValue(temp);
+                        string points = raw_message.Substring(3, numDigits);
+                        string listElt = CropString(message.Substring(numDigits + 1));
+                        player_list.AppendText(listElt + "  " + points + "\n");  // We append a player + its number 
                     }
                     else if (control == "2L")
                     {
@@ -184,11 +189,7 @@ namespace Client
 
                         opponent = "";
                     }
-                    else if (control == "1G")
-                    {
-                        opponent = message.Substring(22); // 1GGuessthesecretnumber.\n(inviter_name) oldugu icin
-                       
-                    }
+                    
                 }
                 catch
                 {
@@ -300,28 +301,21 @@ namespace Client
 
         }
 
-        //bunu yaptim
+        
         private void button_Guess_Click(object sender, EventArgs e)
         {
-            username = textBox_Username.Text;
             int guess = Convert.ToInt32(textBox_Guess.Text);
-            if (guess >= 0 && guess <= 100)
+
+            while(!(guess >= 0 && guess <= 100))
             {
-                byte[] buffer = Encoding.Default.GetBytes("2G" + guess + opponent);
-                clientSocket.Send(buffer);
-                richTextBox.AppendText("The number that you have guessed is sent. \n");
+                richTextBox.AppendText("Your number is not in range. Try again. \n");
+                guess = Convert.ToInt32(textBox_Guess.Text);
 
             }
-            else
-            {
-                terminating = true;
-                clientSocket.Close();
-                richTextBox.AppendText("ERROR: The number could not be sent as it is not between 0 and 100. \n");
 
-            }
-            
-
-
+            byte[] buffer = Encoding.Default.GetBytes("1G" + guess);
+            clientSocket.Send(buffer);
+            richTextBox.AppendText("The number that you have guessed is sent. \n");
         }
     }
 }

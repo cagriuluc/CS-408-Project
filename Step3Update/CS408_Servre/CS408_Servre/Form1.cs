@@ -146,8 +146,9 @@ namespace CS408_Servre
             byte[] buffer = new byte[64];
             for (int i = 0; i < playerList.Count - 1; i++)
             {
-                SendString("1L" + playerList[i].GetName() + playerList[i].GetPoint(), player_no); //buraya playerList[i].GetPoint() ekledim
+                SendString("1L" + playerList[i].GetName() + playerList[i].GetPoint(), player_no);
                 System.Threading.Thread.Sleep(30);
+                //If this is not in place, two messages is taken as 1
             }
 
             SendString("2L" + playerList[playerList.Count - 1].GetName(), player_no);  //2L is a tag for the last player name
@@ -222,8 +223,8 @@ namespace CS408_Servre
                     //0I is an invitation from a player
                     //2I is the response to an invitation
                     //4I is surrender from a player
-                    //1G is the beginning of the game
-                    //2G is the guess of a player
+                    //1G is a guess from a player
+
                     string message = CropString(raw_message.Substring(2));
                     if (control == "0M")
                     {

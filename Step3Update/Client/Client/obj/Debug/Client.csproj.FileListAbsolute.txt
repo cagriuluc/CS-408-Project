@@ -1,0 +1,10 @@
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\bin\Debug\Client.exe
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\bin\Debug\Client.pdb
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.Client.resources
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.Pop_up.resources
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.Properties.Resources.resources
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.exe
+C:\Users\ASUS\Documents\GitHub\CS-408-Project\Step3Update\Client\Client\obj\Debug\Client.pdb
