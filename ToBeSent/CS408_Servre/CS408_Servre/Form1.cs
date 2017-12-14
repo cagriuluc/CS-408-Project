@@ -416,11 +416,78 @@ namespace CS408_Servre
                                     }
                                 }
                             }
+                            
+                            else if(activeGames[game_no].player2 == username)
+                            {
+                                if (activeGames[game_no].temp_guess_1 == -101)
+                                {
+                                    activeGames[game_no].temp_guess_2 = Convert.ToInt32(message);
+                                }
 
+                                else
+                                {
+                                    if (Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) < Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_1))
+                                    {
+                                        //This user won the round
+                                        activeGames[game_no].score2++;
+                                        richTextBox1.AppendText("Round won by " + username + " against " + activeGames[game_no].player1);
+                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player1));
+                                    }
+
+                                    else if (Math.Abs(activeGames[game_no].temp_number - Convert.ToInt32(message)) > Math.Abs(activeGames[game_no].temp_number - activeGames[game_no].temp_guess_1))
+                                    {
+                                        //Opponent won the round
+                                        activeGames[game_no].score1++;
+                                        richTextBox1.AppendText("Round won by " + activeGames[game_no].player1 + " against " + username);
+                                        sendMessage("You won the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player1));
+                                        sendMessage("You lost the round! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                    }
+
+                                    else
+                                    {
+                                        richTextBox1.AppendText("Round is tie between " + activeGames[game_no].player2 + " and " + username);
+                                        sendMessage("Round is a tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(activeGames[game_no].player2));
+                                        sendMessage("Round is a tie! " + activeGames[game_no].score1 + " - " + activeGames[game_no].score2, CheckName(username));
+                                    }
+
+                                    //if the game is not finished yet, reset game data and make new random int 
+                                   
+                                }
+                            }
+                            if (activeGames[game_no].score1 + activeGames[game_no].score2 >= 3)
+                            {
+                                string winner = "";
+                                string loser = "";
+                                if (activeGames[game_no].score1 < activeGames[game_no].score2)
+                                {
+                                    winner = activeGames[game_no].player2;
+                                    loser = activeGames[game_no].player1;
+                                }
+                                else if (activeGames[game_no].score1 > activeGames[game_no].score2)
+                                {
+                                    winner = activeGames[game_no].player1;
+                                    loser = activeGames[game_no].player2;
+
+                                }
+                                int winner_no = CheckName(winner);
+                                int loser_no = CheckName(loser);
+
+
+                                SendString("5I" + winner, winner_no);
+                                SendString("5I" + winner, loser_no);
+                                richTextBox1.AppendText(Environment.NewLine + activeGames[game_no].player1 + "-" + activeGames[game_no].player2 + " winner is " + winner);
+                                richTextBox1.AppendText(Environment.NewLine + "Match result is sent to " + winner + " and " + loser);
+                                playerList[winner_no].in_game = false;
+                                playerList[loser_no].in_game = false;
+                                activeGames.Remove(activeGames[CheckGame(winner)]);
+                                playerList[winner_no].score++;
+                            }
                         }
 
                         else
                         {
+                            sendMessage("You are not in a game.\n", CheckName(username));
 
                         }
                     }
